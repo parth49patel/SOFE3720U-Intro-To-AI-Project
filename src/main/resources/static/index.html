@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BudgetCart AI</title>
+        <style>
+            body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+            .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-top: 20px;}
+            input, button { padding: 10px; font-size: 16px; margin-top: 10px;}
+            button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        </style>
+    </head>
+    <body>
+
+        <h2>BudgetCart: AI Grocery Optimizer</h2>
+        <p>Maximize your nutritional value without exceeding your budget using a Genetic Algorithm.</p>
+
+        <label for="budget">Enter Max Budget ($):</label><br>
+        <input type="number" id="budget" step="0.50" value="15.00">
+        <button onclick="runAI()">Optimize Cart</button>
+
+        <div id="results" class="card" style="display:none;">
+            <h3>Optimal Shopping List</h3>
+            <ul id="itemList"></ul>
+            <hr>
+            <p><strong>Total Cost:</strong> $<span id="totalCost"></span></p>
+            <p><strong>Total Calories:</strong> <span id="totalCalories"></span> kcal</p>
+        </div>
+
+        <div id="logBox" style="background:#222; color:#0f0; padding:15px; height:200px; overflow-y:auto; font-family:monospace; margin-top:20px; border-radius:8px; display:none;">
+            <h4>--- ALGORITHM EXECUTION LOG ---</h4>
+            <div id="historyList"></div>
+        </div>
+
+        <script>
+            async function runAI() {
+                const budget = document.getElementById('budget').value;
+                const response = await fetch(`/api/optimize?budget=${budget}`);
+                const data = await response.json();
+
+                // 1. Render the Grocery List
+                const itemList = document.getElementById('itemList');
+                itemList.innerHTML = '';
+                data.items.forEach(item => {
+                    let li = document.createElement('li');
+                    li.innerText = `${item.name} - $${item.cost.toFixed(2)} (${item.calories} kcal)`;
+                    itemList.appendChild(li);
+                });
+                document.getElementById('totalCost').innerText = data.totalCost.toFixed(2);
+                document.getElementById('totalCalories').innerText = data.totalCalories;
+                document.getElementById('results').style.display = 'block';
+
+                // 2. Render the AI Step-by-Step Log
+                const historyList = document.getElementById('historyList');
+                historyList.innerHTML = '';
+                data.history.forEach(log => {
+                    let p = document.createElement('p');
+                    p.style.margin = "5px 0";
+                    p.innerText = log;
+                    historyList.appendChild(p);
+                });
+                document.getElementById('logBox').style.display = 'block';
+            }
+        </script>
+    </body>
+</html>
