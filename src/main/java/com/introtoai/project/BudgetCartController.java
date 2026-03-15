@@ -17,8 +17,8 @@ public class BudgetCartController {
 
     @GetMapping("/optimize")
     public Map<String, Object> optimizeCart(@RequestParam double budget) {
-        // Run AI and get the combined result
-        Map<String, Object> gaResult = gaService.runOptimization(budget, 50, 100);
+        // Run AI with a strict population of 20 and 10 generations
+        Map<String, Object> gaResult = gaService.runOptimization(budget, 20, 10);
 
         // Extract the items to calculate totals
         @SuppressWarnings("unchecked")
