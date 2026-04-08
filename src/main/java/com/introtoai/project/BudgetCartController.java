@@ -2,7 +2,6 @@ package com.introtoai.project;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -18,7 +17,7 @@ public class BudgetCartController {
     @GetMapping("/optimize")
     public Map<String, Object> optimizeCart(@RequestParam double budget) {
         // Run AI with a strict population of 20 and 10 generations
-        Map<String, Object> gaResult = gaService.runOptimization(budget, 20, 10);
+        Map<String, Object> gaResult = gaService.runOptimization(budget);
 
         // Extract the items to calculate totals
         @SuppressWarnings("unchecked")
